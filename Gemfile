@@ -60,3 +60,6 @@ end
 gem "shakapacker", "= 7.2"
 
 gem "react_on_rails", "= 13.4"
+
+
+gem "solargraph", "~> 0.50.0"

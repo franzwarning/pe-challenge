@@ -13,3 +13,14 @@
 //
 // const images = require.context('./images', true)
 // const imagePath = (name) => images(name, true)
+
+import ReactOnRails from 'react-on-rails';
+
+import HelloWorld from '../bundles/HelloWorld/components/HelloWorld';
+
+ReactOnRails.register({
+    HelloWorld,
+});
+  
+require("stylesheets/application.scss")
+
