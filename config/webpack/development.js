@@ -2,9 +2,9 @@
 // https://github.com/shakacode/react_on_rails_demo_ssr_hmr/blob/master/config/webpack/development.js
 
 const { devServer, inliningCss } = require('shakapacker');
-
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const webpackConfig = require('./webpackConfig');
-
+const path = require('path')
 const developmentEnvOnly = (clientWebpackConfig, _serverWebpackConfig) => {
   // plugins
   if (inliningCss) {
@@ -21,6 +21,15 @@ const developmentEnvOnly = (clientWebpackConfig, _serverWebpackConfig) => {
       }),
     );
   }
+
+  clientWebpackConfig.plugins.push(
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        configFile: path.resolve(__dirname, '../../tsconfig.json')
+      },
+      async: false
+    })
+  )
 };
 
 module.exports = webpackConfig(developmentEnvOnly);
