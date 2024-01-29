@@ -30,6 +30,10 @@ RUN bundle exec bootsnap precompile --gemfile
 # Copy application code
 COPY . .
 
+# Add nodejs to contianer
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -  # Replace "14.x" with your preferred Node.js version
+RUN apt-get install -y nodejs
+
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
