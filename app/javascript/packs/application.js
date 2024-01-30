@@ -16,10 +16,10 @@
 
 import ReactOnRails from 'react-on-rails';
 
-import HelloWorld from '../bundles/HelloWorld/components/HelloWorld';
+import HomePage from '../bundles/Home/components/Home';
 
 ReactOnRails.register({
-    HelloWorld,
+    HomePage
 });
   
 require("stylesheets/application.scss")

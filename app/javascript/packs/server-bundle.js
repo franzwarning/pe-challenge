@@ -1,8 +1,8 @@
 import ReactOnRails from 'react-on-rails';
 
-import HelloWorld from '../bundles/HelloWorld/components/HelloWorldServer';
+import Home from '../bundles/Home/components/HomeServer';
 
-// This is how react_on_rails can see the HelloWorld in the browser.
+// This is how react_on_rails can see the Home in the browser.
 ReactOnRails.register({
-  HelloWorld,
+  Home,
 });
