@@ -1,4 +1,6 @@
 class Api::V1::FilesController < ApiBaseController
+  include SupabaseHelper
+
   def create
     file = UserFile.new(create_params)
     file.anonymous_users_id = @anonymous_user.id
@@ -9,7 +11,7 @@ class Api::V1::FilesController < ApiBaseController
   end
 
   def presigned_url
-    response = SupabaseHelper.request(
+    response = supabase_request(
       path: "/storage/v1/object/upload/sign/user_files/#{SecureRandom.uuid}",
       method: :post
     )
