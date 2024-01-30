@@ -16,7 +16,7 @@ class Api::V1::FilesController < ApiBaseController
       method: :post
     )
 
-    render json: {url: response["url"]}
+    render json: response
   end
 
   private
