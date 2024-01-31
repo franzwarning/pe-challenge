@@ -29,17 +29,25 @@ async function makeRequest<T>(url: string, options: RequestInit = {}): Promise<T
 }
 
 interface GeneratePresignedUrlResponse {
-  url: string
+  id: number
+  presigned_upload_url: string
+  bucket_path: string
+  file_name: string
+  mime_type: string
 }
 
 export async function uploadFile(file: File) {
   // get presigned url
-  const { url: presignedUploadUrl } = await makeRequest<GeneratePresignedUrlResponse>('/api/v1/files/presigned_url', {
-    method: 'POST'
+  const presignedUrlResponse = await makeRequest<GeneratePresignedUrlResponse>('/api/v1/files/presigned_url', {
+    method: 'POST',
+    body: JSON.stringify({
+      file_name: file.name,
+      mime_type: file.type
+    })
   })
 
   // upload file to presigned url
-  await fetch(`${process.env.SUPABASE_URL}/storage/v1${presignedUploadUrl}`, {
+  await fetch(`${process.env.SUPABASE_URL}/storage/v1${presignedUrlResponse.presigned_upload_url}`, {
     method: 'PUT',
     body: file,
     headers: {
@@ -47,5 +55,7 @@ export async function uploadFile(file: File) {
     }
   })
 
-  debugger
+  console.log(`uploaded....`)
+
+  // create file on the database
 }

@@ -11,8 +11,12 @@ Rails.application.routes.draw do
   # api for creating files
   namespace :api do
     namespace :v1 do
-      resources :files, only: [:create] do
+      resources :files do
         post :presigned_url, on: :collection
+      end
+
+      namespace :webhooks do
+        resources :supabase, only: [:create]
       end
     end
   end

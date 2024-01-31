@@ -15,8 +15,6 @@ export function DropArea() {
 
   const setMotionValues = React.useCallback((x: number, y: number) => {
     if (xValue.get() !== x || yValue.get() !== y) {
-      console.log(`setMotionValues (${x}, ${y})`)
-
       xValue.set(x)
       yValue.set(y)
     }
@@ -25,7 +23,6 @@ export function DropArea() {
     () => debounce(setMotionValues, 100, { maxWait: 100, leading: true, trailing: true }),
     []
   )
-  console.log(`process.env.SUPABASE_ANON_PUBLIC_KEY`, process.env.SUPABASE_ANON_PUBLIC_KEY)
 
   const startUpload = React.useCallback(async (file: File) => {
     const success = await uploadFile(file)

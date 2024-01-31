@@ -1,27 +1,26 @@
 class Api::V1::FilesController < ApiBaseController
   include SupabaseHelper
 
-  def create
-    file = UserFile.new(create_params)
-    file.anonymous_users_id = @anonymous_user.id
-    file.save!
-    render json: file
-
-    ProcessFileJob.perform_later(file.id)
-  end
-
   def presigned_url
+    file = UserFile.new(presigned_url_params)
+    file.anonymous_users_id = @anonymous_user.id
+
+    extension = file.file_name.split(".").last
+    file.bucket_path = "#{SecureRandom.uuid}.#{extension}"
+
     response = supabase_request(
-      path: "/storage/v1/object/upload/sign/user_files/#{SecureRandom.uuid}",
+      path: "/storage/v1/object/upload/sign/user_files/#{file.bucket_path}",
       method: :post
     )
-
-    render json: response
+    file.presigned_upload_url = response["url"]
+    file.save!
+    render json: file
+    print("end")
   end
 
   private
 
-  def create_params
-    params.permit(:file_name, :bucket_path)
+  def presigned_url_params
+    params.permit(:file_name, :mime_type)
   end
 end
