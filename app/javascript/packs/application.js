@@ -14,13 +14,12 @@
 // const images = require.context('./images', true)
 // const imagePath = (name) => images(name, true)
 
-import ReactOnRails from 'react-on-rails';
+import ReactOnRails from 'react-on-rails'
 
-import HomePage from '../bundles/Home/components/Home';
+import HomePage from '../bundles/pages/HomePage'
 
 ReactOnRails.register({
-    HomePage
-});
-  
-require("stylesheets/application.scss")
+  HomePage
+})
 
+require('stylesheets/application.scss')
