@@ -16,10 +16,12 @@
 
 import ReactOnRails from 'react-on-rails'
 
+import FilePage from '../bundles/pages/FilePage'
 import HomePage from '../bundles/pages/HomePage'
 
 ReactOnRails.register({
-  HomePage
+  HomePage,
+  FilePage
 })
 
 require('stylesheets/application.scss')
