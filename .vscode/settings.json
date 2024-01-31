@@ -3,5 +3,8 @@
     "[ruby]": {
         "editor.defaultFormatter": "testdouble.vscode-standard-ruby"
     },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
     "standardRuby.mode": "enableUnconditionally"
 }
