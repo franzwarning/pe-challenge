@@ -35,14 +35,20 @@ export function DropArea(props: { className: string }) {
   const startUpload = React.useCallback(async (file: File) => {
     setIsUploading(true)
     animate(uploadProgressPercent, 10)
-    const fileId = await uploadFile(file, (progressPercent) => {
-      console.log(`setting progress percent: ${progressPercent}`)
-      animate(uploadProgressPercent, progressPercent)
-    })
-    setUploaded(true)
-    setTimeout(() => {
-      window.location.href = `/files/${fileId}`
-    }, 2000)
+    try {
+      const fileId = await uploadFile(file, (progressPercent) => {
+        console.log(`setting progress percent: ${progressPercent}`)
+        animate(uploadProgressPercent, progressPercent)
+      })
+      setUploaded(true)
+      setTimeout(() => {
+        window.location.href = `/files/${fileId}`
+      }, 2000)
+    } catch (error) {
+      toast.error(error.message || 'Something went wrong, please try again later!')
+      setIsUploading(false)
+      animate(uploadProgressPercent, 0)
+    }
   }, [])
 
   return (

@@ -29,6 +29,7 @@ interface GeneratePresignedUrlResponse {
 
 export async function uploadFile(file: File, progressCallback: (progressPercent) => void) {
   const timestamp = new Date().getTime()
+
   // get presigned url
   const presignedUrlResponse = await makeRequest<GeneratePresignedUrlResponse>('/api/v1/files/presigned_url', {
     method: 'POST',
@@ -37,7 +38,6 @@ export async function uploadFile(file: File, progressCallback: (progressPercent)
       mime_type: file.type
     })
   })
-
   await axios.request({
     method: 'put',
     url: `${process.env.SUPABASE_URL}/storage/v1${presignedUrlResponse.presigned_upload_url}`,
