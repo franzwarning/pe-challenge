@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import { twMerge } from 'tailwind-merge'
 
 import { uploadFile } from '../../../api/api'
+import { GumroadGuy } from '../../../icons/GumroadGuy'
 
 export function DropArea(props: { className: string }) {
   const [dropIconVisible, setDropIconVisible] = React.useState(false)
@@ -97,7 +98,7 @@ export function DropArea(props: { className: string }) {
         startUpload(fileToUpload)
       }}
     >
-      <div className="flex flex-col items-center justify-center text-2xl gap-2">
+      <div className="flex flex-col items-center justify-center text-2xl gap-2 relative z-10">
         <div className="">Drag and drop here</div>
         <div>or</div>
         <button
@@ -109,6 +110,9 @@ export function DropArea(props: { className: string }) {
           Select a file
         </button>
         <input ref={inputRef} type="file" id="file" hidden />
+      </div>
+      <div className="absolute bottom-0 lg:right-20 md:right-10 sm:right-2 z-0">
+        <GumroadGuy />
       </div>
       <AnimatePresence>
         {dropIconVisible && (

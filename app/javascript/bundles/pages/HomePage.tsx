@@ -7,8 +7,8 @@ export default function HomePage() {
   return (
     <PageWrapper>
       <div className="text-black h-full w-full flex items-start relative z-10 flex-col gap-10 pt-24">
-        <div className="text-4xl">Welcome to Gumdrop.</div>
-        <div className="text-2xl max-w-paragraph w-full self-stretch">
+        <div className="text-4xl font-medium">Welcome to Gumdrop.</div>
+        <div className="text-xl max-w-paragraph w-full self-stretch">
           Gumdrop is the easiest way to list your product on Gumroad. Simply drag and drop a file into the area below
           and let Gumdrop do the rest!
         </div>
