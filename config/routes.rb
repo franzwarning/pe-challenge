@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   # api for creating files
   namespace :api do
     namespace :v1 do
-      resources :files, only: [] do
+      resources :files, only: [:update] do
         post :presigned_url, on: :collection
       end
 

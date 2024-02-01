@@ -2,10 +2,11 @@ import { AnimatePresence, motion, useMotionValue, useSpring } from 'framer-motio
 import debounce from 'lodash.debounce'
 import * as React from 'react'
 import toast from 'react-hot-toast'
+import { twMerge } from 'tailwind-merge'
 
 import { uploadFile } from '../../../api/api'
 
-export function DropArea() {
+export function DropArea(props: { className: string }) {
   const [dropIconVisible, setDropIconVisible] = React.useState(false)
   const [uploadProgressPercent, setUploadProgressPercent] = React.useState(0)
 
@@ -37,7 +38,10 @@ export function DropArea() {
 
   return (
     <div
-      className="absolute inset-0 z-0"
+      className={twMerge(
+        'border border-dashed border-black rounded flex flex-col bg-white relative items-center justify-center',
+        props.className
+      )}
       onDragEnter={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -92,26 +96,29 @@ export function DropArea() {
         startUpload(fileToUpload)
       }}
     >
-      <div className="w-full h-full relative">
-        <AnimatePresence>
-          {dropIconVisible && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute w-20 h-20 bg-gray-200 border-gray-400 rounded-xl border touch-none select-none pointer-events-none"
-              style={{
-                x: xSpring,
-                y: ySpring,
-                translateX: '-50%',
-                translateY: '-50%'
-              }}
-            >
-              <div>{`%${uploadProgressPercent}`}</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <div className="flex flex-col items-center justify-center text-2xl gap-2">
+        <div className="">Drag and drop here</div>
+        <div>or</div>
+        <button className="bg-black text-white px-12 py-1">Select a file</button>
       </div>
+      <AnimatePresence>
+        {dropIconVisible && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute w-20 h-20 bg-gray-200 border-gray-400 rounded-xl border touch-none select-none pointer-events-none"
+            style={{
+              x: xSpring,
+              y: ySpring,
+              translateX: '-50%',
+              translateY: '-50%'
+            }}
+          >
+            <div>{`%${uploadProgressPercent}`}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

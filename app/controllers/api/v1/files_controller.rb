@@ -21,7 +21,17 @@ class Api::V1::FilesController < ApiBaseController
     print("end")
   end
 
+  def update
+    file = UserFile.find(params[:id])
+    file.update!(update_params)
+    render json: file
+  end
+
   private
+
+  def update_params
+    params.permit(:file_name, :description, :price_usd)
+  end
 
   def normalized_filename
     params[:file_name].gsub(/[^0-9A-Za-z.\-]/, "_")

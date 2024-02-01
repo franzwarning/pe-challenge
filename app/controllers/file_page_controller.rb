@@ -3,7 +3,7 @@ class FilePageController < ApplicationController
 
   def show
     @file_page_props = {
-      file: file.as_json(include: {anonymous_user: {only: :uuid}})
+      file: UserFileSerializer.new(file, scope: @anonymous_user)
     }
   end
 
