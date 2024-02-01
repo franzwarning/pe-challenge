@@ -57,5 +57,6 @@ export async function uploadFile(file: File) {
 
   console.log(`uploaded....`)
 
+  window.location.href = `/files/${presignedUrlResponse.id}`
   // create file on the database
 }
