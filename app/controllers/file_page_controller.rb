@@ -2,7 +2,9 @@ class FilePageController < ApplicationController
   before_action :file_exists
 
   def show
-    @file_page_props = {file: file}
+    @file_page_props = {
+      file: file.as_json(include: {anonymous_user: {only: :uuid}})
+    }
   end
 
   private
