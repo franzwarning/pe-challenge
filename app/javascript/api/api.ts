@@ -28,6 +28,7 @@ interface GeneratePresignedUrlResponse {
 }
 
 export async function uploadFile(file: File, progressCallback: (progressPercent) => void) {
+  const timestamp = new Date().getTime()
   // get presigned url
   const presignedUrlResponse = await makeRequest<GeneratePresignedUrlResponse>('/api/v1/files/presigned_url', {
     method: 'POST',
@@ -50,12 +51,11 @@ export async function uploadFile(file: File, progressCallback: (progressPercent)
     }
   })
 
-  await new Promise((res) => {
-    setTimeout(res, 4000)
-  })
+  // make sure it's been at least 1.5 seconds
+  const now = new Date().getTime()
+  if (now - timestamp < 1500) {
+    await new Promise((resolve) => setTimeout(resolve, 1500 - (now - timestamp)))
+  }
 
-  console.log(`uploaded....`)
-
-  // window.location.href = `/files/${presignedUrlResponse.id}`
-  // create file on the database
+  return presignedUrlResponse.id
 }

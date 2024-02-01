@@ -1,3 +1,4 @@
+import { CheckCircleIcon } from '@heroicons/react/24/solid'
 import { animate, AnimatePresence, easeInOut, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import debounce from 'lodash.debounce'
 import * as React from 'react'
@@ -9,6 +10,7 @@ import { GumroadGuy } from '../../../icons/GumroadGuy'
 
 export function DropArea(props: { className: string }) {
   const [isUploading, setIsUploading] = React.useState(false)
+  const [uploaded, setUploaded] = React.useState(false)
   const [dropIconVisible, setDropIconVisible] = React.useState(false)
   const inputRef = React.useRef<HTMLInputElement>(null)
 
@@ -32,11 +34,15 @@ export function DropArea(props: { className: string }) {
 
   const startUpload = React.useCallback(async (file: File) => {
     setIsUploading(true)
-    const success = await uploadFile(file, (progressPercent) => {
+    animate(uploadProgressPercent, 10)
+    const fileId = await uploadFile(file, (progressPercent) => {
       console.log(`setting progress percent: ${progressPercent}`)
       animate(uploadProgressPercent, progressPercent)
     })
-    setIsUploading(false)
+    setUploaded(true)
+    setTimeout(() => {
+      window.location.href = `/files/${fileId}`
+    }, 2000)
   }, [])
 
   return (
@@ -104,7 +110,18 @@ export function DropArea(props: { className: string }) {
         )}
       >
         <AnimatePresence mode="wait" initial={false}>
-          {isUploading ? (
+          {uploaded ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              key={'uploaded'}
+              className="text-2xl z-20 flex items-center justify-center gap-3"
+            >
+              <div>Uploaded</div>
+              <CheckCircleIcon className="w-8 h-8" />
+            </motion.div>
+          ) : isUploading ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
