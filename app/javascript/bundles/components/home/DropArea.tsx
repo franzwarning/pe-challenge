@@ -76,7 +76,7 @@ export function DropArea(props: { className: string }) {
           toast.error('Only one file at a time. Use a zip file to upload multiple files.')
           setDropIconVisible(false)
           return
-        } else if (dt.items.length && dt.items[0].webkitGetAsEntry().isDirectory) {
+        } else if (dt.items.length && dt.items[0].webkitGetAsEntry()?.isDirectory) {
           toast.error('Cannot upload a directory. Use a zip file to upload multiple files.')
           setDropIconVisible(false)
           return

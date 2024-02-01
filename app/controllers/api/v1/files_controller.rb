@@ -17,14 +17,13 @@ class Api::V1::FilesController < ApiBaseController
     )
     file.presigned_upload_url = response["url"]
     file.save!
-    render json: file
-    print("end")
+    render json: file, serializer: UserFileSerializer, context: {anonymous_user: @anonymous_user}
   end
 
   def update
     file = UserFile.find(params[:id])
     file.update!(update_params)
-    render json: file
+    render json: UserFileSerializer.new(file, context: {anonymous_user: @anonymous_user})
   end
 
   private

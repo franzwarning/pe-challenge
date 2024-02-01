@@ -3,7 +3,7 @@ class FilePageController < ApplicationController
 
   def show
     @file_page_props = {
-      file: UserFileSerializer.new(file, scope: @anonymous_user)
+      file: UserFileSerializer.new(file, context: {anonymous_user: @anonymous_user})
     }
   end
 

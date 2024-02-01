@@ -25,6 +25,7 @@ export default function FilePage(props: {
     <PageWrapper>
       <div className="w-full h-full flex flex-col gap-3">
         <div className="text-4xl">{file_name}</div>
+        {JSON.stringify(props)}
       </div>
     </PageWrapper>
   )
