@@ -50,6 +50,10 @@ export async function uploadFile(file: File, progressCallback: (progressPercent)
     }
   })
 
+  await new Promise((res) => {
+    setTimeout(res, 4000)
+  })
+
   console.log(`uploaded....`)
 
   // window.location.href = `/files/${presignedUrlResponse.id}`
