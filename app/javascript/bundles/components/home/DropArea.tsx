@@ -63,8 +63,17 @@ export function DropArea() {
         const dt = e.dataTransfer
         const files = dt.files
 
+        /**
+         * Some error handling
+         */
         if (files.length > 1) {
-          toast.error('Only one file at a time. Zip files are supported.')
+          toast.error('Only one file at a time. Use a zip file to upload multiple files.')
+          setDropIconVisible(false)
+          return
+        } else if (dt.items.length && dt.items[0].webkitGetAsEntry().isDirectory) {
+          toast.error('Cannot upload a directory. Use a zip file to upload multiple files.')
+          setDropIconVisible(false)
+          return
         }
         let fileToUpload: File | null = null
         if (files.length === 1) {

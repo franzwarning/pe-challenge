@@ -2,7 +2,10 @@ class Api::V1::FilesController < ApiBaseController
   include SupabaseHelper
 
   def presigned_url
-    file = UserFile.new(presigned_url_params)
+    file = UserFile.new(
+      file_name: normalized_filename,
+      mime_type: presigned_url_params[:mime_type]
+    )
     file.anonymous_users_id = @anonymous_user.id
 
     extension = file.file_name.split(".").last
@@ -19,6 +22,10 @@ class Api::V1::FilesController < ApiBaseController
   end
 
   private
+
+  def normalized_filename
+    params[:file_name].gsub(/[^0-9A-Za-z.\-]/, "_")
+  end
 
   def presigned_url_params
     params.permit(:file_name, :mime_type)

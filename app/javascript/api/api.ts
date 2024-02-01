@@ -60,17 +60,8 @@ export async function uploadFile(file: File, progressCallback: (progressPercent)
     }
   })
 
-  // upload file to presigned url
-  // await fetch(`${process.env.SUPABASE_URL}/storage/v1${presignedUrlResponse.presigned_upload_url}`, {
-  //   method: 'PUT',
-  //   body: file,
-  //   headers: {
-  //     Authorization: `Bearer ${process.env.SUPABASE_ANON_PUBLIC_KEY}`
-  //   }
-  // })
-
   console.log(`uploaded....`)
 
-  // window.location.href = `/files/${presignedUrlResponse.id}`
+  window.location.href = `/files/${presignedUrlResponse.id}`
   // create file on the database
 }
