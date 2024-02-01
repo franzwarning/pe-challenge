@@ -52,6 +52,6 @@ export async function uploadFile(file: File, progressCallback: (progressPercent)
 
   console.log(`uploaded....`)
 
-  window.location.href = `/files/${presignedUrlResponse.id}`
+  // window.location.href = `/files/${presignedUrlResponse.id}`
   // create file on the database
 }
