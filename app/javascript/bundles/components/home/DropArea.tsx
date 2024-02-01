@@ -171,7 +171,7 @@ export function DropArea(props: { className: string }) {
           <GumroadGuy />
         </motion.div>
         <motion.div
-          className="absolute top-0 bottom-0 left-0 bg-[#ff91e7]/40"
+          className="absolute top-0 bottom-0 left-0 bg-[#ff91e7]/30"
           style={{ width: widthTransform }}
         ></motion.div>
         <AnimatePresence>
