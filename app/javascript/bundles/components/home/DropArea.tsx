@@ -9,6 +9,7 @@ import { uploadFile } from '../../../api/api'
 export function DropArea(props: { className: string }) {
   const [dropIconVisible, setDropIconVisible] = React.useState(false)
   const [uploadProgressPercent, setUploadProgressPercent] = React.useState(0)
+  const inputRef = React.useRef<HTMLInputElement>(null)
 
   const xValue = useMotionValue(0)
   const xSpring = useSpring(xValue, { bounce: 0.3 })
@@ -99,7 +100,15 @@ export function DropArea(props: { className: string }) {
       <div className="flex flex-col items-center justify-center text-2xl gap-2">
         <div className="">Drag and drop here</div>
         <div>or</div>
-        <button className="bg-black text-white px-12 py-1">Select a file</button>
+        <button
+          className="bg-black text-white px-12 py-1 focus:ring-2 ring-black ring-offset-1 outline-none"
+          onClick={() => {
+            inputRef.current!.click()
+          }}
+        >
+          Select a file
+        </button>
+        <input ref={inputRef} type="file" id="file" hidden />
       </div>
       <AnimatePresence>
         {dropIconVisible && (

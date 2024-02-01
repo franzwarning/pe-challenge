@@ -1,18 +1,8 @@
 import axios from 'axios'
-import { v4 } from 'uuid'
-
-import { LocalStorageKeys } from '../utils/localStorage'
 
 function getDefaultHeaders() {
-  let anonymousUserId = localStorage.getItem(LocalStorageKeys.AnonymousUserId)
-  if (!anonymousUserId) {
-    anonymousUserId = v4()
-    localStorage.setItem(LocalStorageKeys.AnonymousUserId, anonymousUserId)
-  }
-
   return {
     'Content-Type': 'application/json',
-    'X-Anonymous-User-Id': anonymousUserId,
     'X-Supabase-Api-Key': process.env.SUPABASE_ANON_PUBLIC_KEY
   }
 }
