@@ -7,6 +7,7 @@ import { uploadFile } from '../../../api/api'
 
 export function DropArea() {
   const [dropIconVisible, setDropIconVisible] = React.useState(false)
+  const [uploadProgressPercent, setUploadProgressPercent] = React.useState(0)
 
   const xValue = useMotionValue(0)
   const xSpring = useSpring(xValue, { bounce: 0.3 })
@@ -24,9 +25,15 @@ export function DropArea() {
     []
   )
 
-  const startUpload = React.useCallback(async (file: File) => {
-    const success = await uploadFile(file)
-  }, [])
+  const startUpload = React.useCallback(
+    async (file: File) => {
+      const success = await uploadFile(file, (progressPercent) => {
+        console.log(`setting progress percent: ${progressPercent}`)
+        setUploadProgressPercent(progressPercent)
+      })
+    },
+    [setUploadProgressPercent]
+  )
 
   return (
     <div
@@ -53,7 +60,6 @@ export function DropArea() {
         e.preventDefault()
         e.stopPropagation()
         console.log('drop')
-        setDropIconVisible(false)
         const dt = e.dataTransfer
         const files = dt.files
 
@@ -91,13 +97,12 @@ export function DropArea() {
                 translateX: '-50%',
                 translateY: '-50%'
               }}
-            />
+            >
+              <div>{`%${uploadProgressPercent}`}</div>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
-      {/* <form>
-        <input type="file" hidden />
-      </form> */}
     </div>
   )
 }

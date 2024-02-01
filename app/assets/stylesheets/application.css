@@ -13,3 +13,15 @@
  *= require_tree .
  *= require_self
  */
+
+
+ @font-face {
+    font-family: 'MabryPro-Regular';
+    src: url('/fonts/MabryPro-Regular.woff2') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'MabryPro-Regular', sans-serif;
+}

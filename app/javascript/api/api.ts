@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { v4 } from 'uuid'
 
 import { LocalStorageKeys } from '../utils/localStorage'
@@ -36,7 +37,7 @@ interface GeneratePresignedUrlResponse {
   mime_type: string
 }
 
-export async function uploadFile(file: File) {
+export async function uploadFile(file: File, progressCallback: (progressPercent) => void) {
   // get presigned url
   const presignedUrlResponse = await makeRequest<GeneratePresignedUrlResponse>('/api/v1/files/presigned_url', {
     method: 'POST',
@@ -46,17 +47,30 @@ export async function uploadFile(file: File) {
     })
   })
 
-  // upload file to presigned url
-  await fetch(`${process.env.SUPABASE_URL}/storage/v1${presignedUrlResponse.presigned_upload_url}`, {
-    method: 'PUT',
-    body: file,
+  await axios.request({
+    method: 'put',
+    url: `${process.env.SUPABASE_URL}/storage/v1${presignedUrlResponse.presigned_upload_url}`,
+    data: file,
+    onUploadProgress: (p) => {
+      console.log(p)
+      progressCallback((p.loaded / p.total) * 100)
+    },
     headers: {
       Authorization: `Bearer ${process.env.SUPABASE_ANON_PUBLIC_KEY}`
     }
   })
 
+  // upload file to presigned url
+  // await fetch(`${process.env.SUPABASE_URL}/storage/v1${presignedUrlResponse.presigned_upload_url}`, {
+  //   method: 'PUT',
+  //   body: file,
+  //   headers: {
+  //     Authorization: `Bearer ${process.env.SUPABASE_ANON_PUBLIC_KEY}`
+  //   }
+  // })
+
   console.log(`uploaded....`)
 
-  window.location.href = `/files/${presignedUrlResponse.id}`
+  // window.location.href = `/files/${presignedUrlResponse.id}`
   // create file on the database
 }
