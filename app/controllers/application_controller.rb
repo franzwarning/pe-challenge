@@ -1,10 +1,10 @@
 class ApplicationController < ActionController::Base
-  before_action :authenticate_user
+  before_action :anonymous_user
 
   private
 
-  def authenticate_user
-    @anonymous_user = AnonymousUser.find_or_create_by(uuid: anonymous_user_id_from_cookies)
+  def anonymous_user
+    @anonymous_user ||= AnonymousUser.find_or_create_by(uuid: anonymous_user_id_from_cookies)
   end
 
   def anonymous_user_id_from_cookies

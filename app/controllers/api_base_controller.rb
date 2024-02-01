@@ -1,13 +1,16 @@
 class ApiBaseController < ActionController::API
-  before_action :authenticate_user
+  before_action :anonymous_user
   wrap_parameters false
 
   private
 
-  def authenticate_user
-    @anonymous_user = AnonymousUser.find_or_create_by(uuid: anonymous_user_id_from_cookies)
-    if @anonymous_user.nil?
-      unauthorized
+  def anonymous_user
+    @anonymous_user ||= begin
+      au = AnonymousUser.find_or_create_by(uuid: anonymous_user_id_from_cookies)
+      if au.nil?
+        unauthorized
+      end
+      au
     end
   end
 

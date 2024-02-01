@@ -1,9 +1,10 @@
 class FilePageController < ApplicationController
   before_action :file_exists
+  serialization_scope :anonymous_user
 
   def show
     @file_page_props = {
-      file: UserFileSerializer.new(file, context: {anonymous_user: @anonymous_user})
+      file: UserFileSerializer.new(file, anonymous_user: @anonymous_user)
     }
   end
 

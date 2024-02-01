@@ -5,10 +5,6 @@ class UserFileSerializer < ActiveModel::Serializer
   belongs_to :anonymous_user, serializer: AnonymousUserSerializer
 
   def owner?
-    object.anonymous_user.id == current_user.id
-  end
-
-  def current_user
-    instance_options[:context][:anonymous_user]
+    object.anonymous_user.id == instance_options[:anonymous_user].id
   end
 end
