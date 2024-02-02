@@ -6,7 +6,7 @@ class Api::V1::Webhooks::SupabaseController < ActionController::API
     file.uploaded = true
     file.save!
 
-    ProcessFileJob.perform_later(file.id)
+    ProcessFileJob.perform_later(file.id, webhook_params[:metadata][:contentLength])
 
     render json: {message: "ok"}
   end

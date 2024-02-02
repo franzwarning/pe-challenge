@@ -69,3 +69,5 @@ gem "standardrb", "~> 1.0"
 gem "httparty", "~> 0.21.0"
 
 gem "sidekiq", "~> 7.2"
+
+gem "ruby-openai", "~> 6.3"

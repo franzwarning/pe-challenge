@@ -1,6 +1,7 @@
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'
 import * as React from 'react'
 
+import { supabaseClient } from '../../utils/supabaseClient'
 import PageWrapper from '../global/PageWrapper'
 
 export default function FilePage(props: {
@@ -16,11 +17,36 @@ export default function FilePage(props: {
     presigned_upload_url: string
     description: string | null
     price_usd: number | null
+    extension: string
+    display_image_url: string
   }
 }) {
-  const {
-    file: { file_name, description }
-  } = props
+  const { file: serverFile } = props
+
+  const [imageUrl, setImageUrl] = React.useState(serverFile.display_image_url)
+  const [description, setDescription] = React.useState(serverFile.description)
+  const [priceUsd, setPriceUsd] = React.useState(serverFile.price_usd)
+
+  /**
+   *  Subscribe to updates in real time
+   */
+  React.useEffect(() => {
+    const channel = supabaseClient
+      .channel('file_updates')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'user_files', filter: `id=eq.${serverFile.id}` },
+        (payload) => {
+          setDescription(payload.new.description)
+          setPriceUsd(payload.new.price_usd)
+          setImageUrl(payload.new.display_image_url)
+        }
+      )
+      .subscribe((status, err) => { })
+    return () => {
+      channel.unsubscribe()
+    }
+  }, [])
 
   return (
     <PageWrapper
@@ -36,18 +62,29 @@ export default function FilePage(props: {
                 <div className="mt-0.5">Gumdrop</div>
               </a>
             </div>
-            <div className="text-2xl">{file_name}</div>
+            <div className="text-2xl max-w-36 sm:max-w-64 md:max-w-96 truncate">{serverFile.file_name}</div>
           </div>
         </div>
       }
     >
-      <div className="w-full h-full flex pt-16">
-        <div>
-          <div className="relative aspect-video">
-            <img src="https://placehold.it/1200x630" className="object-cover w-full h-full" />
-          </div>
-
-          <div>{description}</div>
+      <div className="w-full h-full flex pt-20 gap-3 flex-col sm:flex-row">
+        <div className="relative aspect-square w-full sm:w-40 sm:h-40 flex-00auto bg-gray-100">
+          {imageUrl ? (
+            <img src={imageUrl} className="object-cover w-full h-full" />
+          ) : (
+            <div className="w-full h-full animate-pulse bg-gray-300"></div>
+          )}
+        </div>
+        <div className="">
+          {description ? (
+            <div>{description}</div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {Array.from({ length: 3 }).map((_skeleton, idx) => (
+                <div key={`description-skeleton-${idx}`} className="w-64 h-5 bg-gray-300 animate-pulse" />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </PageWrapper>

@@ -1,5 +1,5 @@
 class UserFileSerializer < ActiveModel::Serializer
-  attributes :id, :file_name, :description, :price_usd
+  attributes :id, :file_name, :description, :price_usd, :display_image_url
   attribute :presigned_upload_url, if: :owner?
 
   belongs_to :anonymous_user, serializer: AnonymousUserSerializer

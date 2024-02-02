@@ -15,6 +15,7 @@ class Api::V1::FilesController < ApiBaseController
       path: "/storage/v1/object/upload/sign/user_files/#{file.bucket_path}",
       method: :post
     )
+    file.extension = extension
     file.presigned_upload_url = response["url"]
     file.save!
     render json: file, serializer: UserFileSerializer, anonymous_user: @anonymous_user
