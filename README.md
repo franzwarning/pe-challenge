@@ -1,12 +1,12 @@
 Gumdrop.
 
-To run:
+## To run:
 
 ```
 ./bin/dev
 ```
 
-Requirements:
+## Requirements:
 
 Download https://supabase.com/docs/guides/cli/getting-started
 
