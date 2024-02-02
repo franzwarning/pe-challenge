@@ -1,24 +1,24 @@
-# README
+Gumdrop.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+To run:
 
-Things you may want to cover:
+```
+./bin/dev
+```
 
-* Ruby version
+Requirements:
 
-* System dependencies
+Download https://supabase.com/docs/guides/cli/getting-started
 
-* Configuration
+Run:
+```
+supabase start
+```
 
-* Database creation
+Create two public buckets in your supabase local setup:
+```
+user_files
+gen_files
+```
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Make sure the user_files table has realtime enabled

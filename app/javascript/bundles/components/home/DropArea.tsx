@@ -1,4 +1,4 @@
-import { CheckCircleIcon } from '@heroicons/react/24/solid'
+import { CheckCircleIcon, PlusCircleIcon } from '@heroicons/react/24/solid'
 import { animate, AnimatePresence, easeInOut, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import debounce from 'lodash.debounce'
 import * as React from 'react'
@@ -36,7 +36,6 @@ export function DropArea(props: { className: string }) {
 
     const x = clientX - dropzoneRect.left
     const y = clientY - dropzoneRect.top
-    console.log(`setting x: ${x}, y: ${y}`)
 
     if (xValue.get() !== x || yValue.get() !== y) {
       xValue.set(x)
@@ -94,22 +93,16 @@ export function DropArea(props: { className: string }) {
           onDragEnter={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            console.log('drag enter')
-            // setDropIconVisible(true)
           }}
           onDragOver={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            console.log('drag over')
-
             debouncedSetFn(e.clientX, e.clientY)
           }}
           onDragLeave={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            console.log('drag leave')
             setShowDropzone(false)
-            // setDropIconVisible(false)
           }}
           onDrop={async (e) => {
             e.preventDefault()
@@ -256,7 +249,7 @@ export function DropArea(props: { className: string }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute w-20 h-20 bg-gray-200 border-gray-400 rounded-xl border touch-none select-none pointer-events-none"
+              className="absolute w-20 h-20  border-gray-200 border-4 rounded-xl  touch-none select-none pointer-events-none top-0 left-0 flex items-center justify-center"
               style={{
                 x: xSpring,
                 y: ySpring,
@@ -264,7 +257,7 @@ export function DropArea(props: { className: string }) {
                 translateY: '-50%'
               }}
             >
-              <div>{`%${uploadProgressPercent}`}</div>
+              <PlusCircleIcon className="w-10 h-10 text-gray-200" />
             </motion.div>
           )}
         </AnimatePresence>
