@@ -12,6 +12,9 @@ module.exports = {
       colors: {
         'page-background': '#F4F4F1'
       },
+      flex: {
+        '00auto': '0 0 auto'
+      },
       maxWidth: {
         page: 1096,
         paragraph: 620

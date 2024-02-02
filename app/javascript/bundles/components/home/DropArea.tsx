@@ -31,7 +31,13 @@ export function DropArea(props: { className: string }) {
   const xSpring = useSpring(xValue, { bounce: 0.3 })
   const yValue = useMotionValue(0)
   const ySpring = useSpring(yValue, { bounce: 0.3 })
-  const setMotionValues = React.useCallback((x: number, y: number) => {
+  const setMotionValues = React.useCallback((clientX: number, clientY: number) => {
+    const dropzoneRect = dropzoneRef.current!.getBoundingClientRect()
+
+    const x = clientX - dropzoneRect.left
+    const y = clientY - dropzoneRect.top
+    console.log(`setting x: ${x}, y: ${y}`)
+
     if (xValue.get() !== x || yValue.get() !== y) {
       xValue.set(x)
       yValue.set(y)
@@ -109,6 +115,22 @@ export function DropArea(props: { className: string }) {
             e.preventDefault()
             e.stopPropagation()
 
+            const dropzoneRect = dropzoneRef.current.getBoundingClientRect()
+
+            /**
+             * Make sure they dropped within the bounds
+             */
+            if (
+              e.clientX < dropzoneRect.left ||
+              e.clientX > dropzoneRect.left + dropzoneRect.width ||
+              e.clientY < dropzoneRect.top ||
+              e.clientY > dropzoneRect.top + dropzoneRect.height
+            ) {
+              console.log('outside')
+              setShowDropzone(false)
+              return
+            }
+
             console.log('drop')
             const dt = e.dataTransfer
             const files = dt.files
@@ -161,6 +183,7 @@ export function DropArea(props: { className: string }) {
           `z-30 border ${showDropzone ? `border-solid` : `border-dashed`}  border-black rounded flex flex-col bg-white relative items-center justify-center overflow-hidden`,
           props.className
         )}
+        ref={dropzoneRef}
       >
         <AnimatePresence mode="wait" initial={false}>
           {isUploaded ? (
@@ -227,8 +250,8 @@ export function DropArea(props: { className: string }) {
           className="absolute top-0 bottom-0 left-0 bg-[#ff91e7]/30"
           style={{ width: widthTransform }}
         ></motion.div>
-        {/* <AnimatePresence>
-          {dropIconVisible && (
+        <AnimatePresence>
+          {showDropzone && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -244,7 +267,7 @@ export function DropArea(props: { className: string }) {
               <div>{`%${uploadProgressPercent}`}</div>
             </motion.div>
           )}
-        </AnimatePresence> */}
+        </AnimatePresence>
       </div>
     </>
   )
