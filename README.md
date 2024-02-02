@@ -1,4 +1,7 @@
-Gumdrop.
+# Gumdrop
+
+A simple way to upload files, and create a listing page for those files.
+
 
 ## To run:
 
