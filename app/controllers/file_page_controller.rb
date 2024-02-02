@@ -6,6 +6,10 @@ class FilePageController < ApplicationController
     @file_page_props = {
       file: UserFileSerializer.new(file, anonymous_user: @anonymous_user)
     }
+
+    set_meta_tags(
+      title: file.file_name
+    )
   end
 
   private
