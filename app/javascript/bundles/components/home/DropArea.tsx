@@ -9,18 +9,28 @@ import { uploadFile } from '../../../api/api'
 import { GumroadGuy } from '../../../icons/GumroadGuy'
 
 export function DropArea(props: { className: string }) {
+  /**
+   * States
+   */
   const [isUploading, setIsUploading] = React.useState(false)
-  const [uploaded, setUploaded] = React.useState(false)
-  const [dropIconVisible, setDropIconVisible] = React.useState(false)
+  const [isUploaded, setUploaded] = React.useState(false)
+  const [showDropzone, setShowDropzone] = React.useState(false)
+
+  /**
+   * Refs
+   */
+  const dropzoneRef = React.useRef<HTMLDivElement>(null)
   const inputRef = React.useRef<HTMLInputElement>(null)
 
+  /**
+   * Animation values + setters
+   */
   const uploadProgressPercent = useMotionValue(0)
   const widthTransform = useTransform(uploadProgressPercent, [0, 100], ['0%', '100%'], { ease: easeInOut })
   const xValue = useMotionValue(0)
   const xSpring = useSpring(xValue, { bounce: 0.3 })
   const yValue = useMotionValue(0)
   const ySpring = useSpring(yValue, { bounce: 0.3 })
-
   const setMotionValues = React.useCallback((x: number, y: number) => {
     if (xValue.get() !== x || yValue.get() !== y) {
       xValue.set(x)
@@ -32,6 +42,25 @@ export function DropArea(props: { className: string }) {
     []
   )
 
+  /**
+   * Drag event listeners
+   */
+  React.useEffect(() => {
+    function windowDragEnter() {
+      console.log(`windowDragEnter`)
+      setShowDropzone(true)
+    }
+
+    window.addEventListener('dragenter', windowDragEnter)
+
+    return () => {
+      window.removeEventListener('dragenter', windowDragEnter)
+    }
+  }, [])
+
+  /**
+   * Upload function (called from clicking input or dropping a file)
+   */
   const startUpload = React.useCallback(async (file: File) => {
     setIsUploading(true)
     animate(uploadProgressPercent, 10)
@@ -53,70 +82,88 @@ export function DropArea(props: { className: string }) {
 
   return (
     <>
-      <div
-        className="fixed inset-0 z-10 pointer-events-none"
-        onDragEnter={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          console.log('drag enter')
-          setDropIconVisible(true)
-        }}
-        onDragOver={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
+      {showDropzone && (
+        <div
+          className="fixed inset-0 z-40"
+          onDragEnter={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            console.log('drag enter')
+            // setDropIconVisible(true)
+          }}
+          onDragOver={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            console.log('drag over')
 
-          debouncedSetFn(e.clientX, e.clientY)
-        }}
-        onDragLeave={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          console.log('drag leave')
-          setDropIconVisible(false)
-        }}
-        onDrop={async (e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          console.log('drop')
-          const dt = e.dataTransfer
-          const files = dt.files
+            debouncedSetFn(e.clientX, e.clientY)
+          }}
+          onDragLeave={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            console.log('drag leave')
+            setShowDropzone(false)
+            // setDropIconVisible(false)
+          }}
+          onDrop={async (e) => {
+            e.preventDefault()
+            e.stopPropagation()
 
-          /**
-           * Some error handling
-           */
-          if (files.length > 1) {
-            toast.error('Only one file at a time. Use a zip file to upload multiple files.')
-            setDropIconVisible(false)
-            return
-          } else if (dt.items.length && dt.items[0].webkitGetAsEntry()?.isDirectory) {
-            toast.error('Cannot upload a directory. Use a zip file to upload multiple files.')
-            setDropIconVisible(false)
-            return
-          }
-          let fileToUpload: File | null = null
-          if (files.length === 1) {
-            fileToUpload = files[0]
-          } else if (dt.items.length === 1) {
-            fileToUpload = dt.items[0].getAsFile()
-            if (!fileToUpload) {
-              fileToUpload = await new Promise((res) => {
-                dt.items[0].getAsString((e) => {
-                  res(new File([e], 'file.txt', { type: 'text/plain' }))
-                })
-              })
+            console.log('drop')
+            const dt = e.dataTransfer
+            const files = dt.files
+
+            /**
+             * Some error handling
+             */
+            if (files.length > 1) {
+              toast.error('Only one file at a time. Use a zip file to upload multiple files.')
+              // setDropIconVisible(false)
+              return
+            } else if (dt.items.length && dt.items[0].webkitGetAsEntry()?.isDirectory) {
+              toast.error('Cannot upload a directory. Use a zip file to upload multiple files.')
+              // setDropIconVisible(false)
+              return
             }
-          }
+            let fileToUpload: File | null = null
+            if (files.length === 1) {
+              fileToUpload = files[0]
+            } else if (dt.items.length === 1) {
+              fileToUpload = dt.items[0].getAsFile()
+              if (!fileToUpload) {
+                fileToUpload = await new Promise((res) => {
+                  dt.items[0].getAsString((e) => {
+                    res(new File([e], 'file.txt', { type: 'text/plain' }))
+                  })
+                })
+              }
+            }
 
-          startUpload(fileToUpload)
-        }}
-      />
+            startUpload(fileToUpload)
+            setShowDropzone(false)
+          }}
+        />
+      )}
+
+      <AnimatePresence>
+        {showDropzone && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            key={'isDroppingBackdrop'}
+            className="bg-black/30 fixed inset-0 z-20 pointer-events-none"
+          ></motion.div>
+        )}
+      </AnimatePresence>
       <div
         className={twMerge(
-          'border border-dashed border-black rounded flex flex-col bg-white relative items-center justify-center overflow-hidden',
+          `z-30 border ${showDropzone ? `border-solid` : `border-dashed`}  border-black rounded flex flex-col bg-white relative items-center justify-center overflow-hidden`,
           props.className
         )}
       >
         <AnimatePresence mode="wait" initial={false}>
-          {uploaded ? (
+          {isUploaded ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -180,7 +227,7 @@ export function DropArea(props: { className: string }) {
           className="absolute top-0 bottom-0 left-0 bg-[#ff91e7]/30"
           style={{ width: widthTransform }}
         ></motion.div>
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {dropIconVisible && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -197,7 +244,7 @@ export function DropArea(props: { className: string }) {
               <div>{`%${uploadProgressPercent}`}</div>
             </motion.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
       </div>
     </>
   )
