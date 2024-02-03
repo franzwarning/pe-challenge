@@ -4,10 +4,7 @@ class ProcessFileJob < ApplicationJob
 
   queue_as :default
 
-  def perform(user_file_id, file_size)
-    print "Processing file #{user_file_id}"
-    file = UserFile.find_by(id: user_file_id)
-
+  def generate_description_and_price(file, file_size)
     chat_prompt = "
       Given the filename \"#{file.file_name}\", a file size of #{file_size} Bytes, and a mimetype of #{file.mime_type}, make up a 4 to 5 sentence description of the file.
       The description should be user friendly, and be assertive of what is in the file. You might have to fake what's in the file, and make up a story.
@@ -32,9 +29,10 @@ class ProcessFileJob < ApplicationJob
     file.description = message_json["DESCRIPTION"]
     file.price_usd = message_json["PRICE_USD"]
     file.save!
+  end
 
-    # generate an image of the file from openai
-    image_response = openai_client.images.generate(parameters: {prompt: "An image to display on a website that sells individual files. Here is a description of the file we're trying to sell: #{message_json["DESCRIPTION"]} "})
+  def generate_file_icon_image(file)
+    image_response = openai_client.images.generate(parameters: {prompt: "A mac os file icon for a \".#{file.extension}\" file type. 3D art style. Smooth, elegant."})
     image_url = image_response["data"][0]["url"]
 
     # upload the image to supabase, first download it
@@ -49,5 +47,15 @@ class ProcessFileJob < ApplicationJob
 
     file.display_image_url = "#{ENV["SUPABASE_URL"]}/storage/v1/object/public/#{result["Key"]}"
     file.save!
+  end
+
+  def perform(user_file_id, file_size)
+    print "Processing file #{user_file_id}"
+    file = UserFile.find_by(id: user_file_id)
+
+    t1 = Thread.new { generate_description_and_price(file, file_size) }
+    t2 = Thread.new { generate_file_icon_image(file) }
+    t1.join
+    t2.join
   end
 end
