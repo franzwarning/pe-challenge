@@ -1,6 +1,7 @@
 class Api::V1::FilesController < ApiBaseController
   include SupabaseHelper
 
+  # Generates a presigned URL for the file upload
   def presigned_url
     file = UserFile.new(
       file_name: normalized_filename,
@@ -21,6 +22,7 @@ class Api::V1::FilesController < ApiBaseController
     render json: file, serializer: UserFileSerializer, anonymous_user: @anonymous_user
   end
 
+  # Never actually ended up using this but keeping just in case
   def update
     file = UserFile.find(params[:id])
     file.update!(update_params)

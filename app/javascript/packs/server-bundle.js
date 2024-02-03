@@ -1,8 +1,6 @@
-import ReactOnRails from 'react-on-rails'
+/**
+ * I don't actually use this file in this project but if we wanted to serverside render
+ * we would register the javascript with react on rails here
+ */
 
-import HomePageServer from '../bundles/pages/HomePage.server'
-
-// This is how react_on_rails can see the Home in the browser.
-ReactOnRails.register({
-  HomePageServer
-})
+module.exports = {}

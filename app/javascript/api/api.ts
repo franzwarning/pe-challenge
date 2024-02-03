@@ -28,7 +28,7 @@ interface GeneratePresignedUrlResponse {
 }
 
 export async function uploadFile(file: File, progressCallback: (progressPercent) => void) {
-  const timestamp = new Date().getTime()
+  const startUploadFileTimestamp = new Date().getTime()
 
   // get presigned url
   const presignedUrlResponse = await makeRequest<GeneratePresignedUrlResponse>('/api/v1/files/presigned_url', {
@@ -38,6 +38,8 @@ export async function uploadFile(file: File, progressCallback: (progressPercent)
       mime_type: file.type
     })
   })
+
+  // upload file
   await axios.request({
     method: 'put',
     url: `${process.env.SUPABASE_URL}/storage/v1${presignedUrlResponse.presigned_upload_url}`,
@@ -51,10 +53,10 @@ export async function uploadFile(file: File, progressCallback: (progressPercent)
     }
   })
 
-  // make sure it's been at least 1.5 seconds
+  // make sure it's been at least 1.5 seconds for the animation
   const now = new Date().getTime()
-  if (now - timestamp < 1500) {
-    await new Promise((resolve) => setTimeout(resolve, 1500 - (now - timestamp)))
+  if (now - startUploadFileTimestamp < 1500) {
+    await new Promise((resolve) => setTimeout(resolve, 1500 - (now - startUploadFileTimestamp)))
   }
 
   return presignedUrlResponse.id

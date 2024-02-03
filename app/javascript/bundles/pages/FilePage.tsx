@@ -111,7 +111,12 @@ export default function FilePage(props: {
                 <div className="w-full h-full animate-pulse bg-gray-300"></div>
               )}
               {priceUsd !== undefined && priceUsd !== null && (
-                <button className="absolute bottom-3 left-3 right-3 px-3 py-1 bg-black text-white font-medium shadow-xl">
+                <button
+                  className="absolute bottom-3 left-3 right-3 px-3 py-1 bg-black text-white font-medium shadow-xl"
+                  onClick={() => {
+                    toast.success("This isn't actually implemented :).")
+                  }}
+                >
                   Purchase for {`${priceUsd === 0 ? `Free` : `$${priceUsd}`}`}
                 </button>
               )}
