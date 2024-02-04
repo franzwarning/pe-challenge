@@ -133,9 +133,11 @@ export function DropArea(props: { className: string }) {
              */
             if (files.length > 1) {
               toast.error('Only one file at a time. Use a zip file to upload multiple files.')
+              setShowDropzone(false)
               return
             } else if (dt.items.length && dt.items[0].webkitGetAsEntry()?.isDirectory) {
               toast.error('Cannot upload a directory. Use a zip file to upload multiple files.')
+              setShowDropzone(false)
               return
             }
             let fileToUpload: File | null = null
