@@ -4,6 +4,7 @@ import * as React from 'react'
 import toast from 'react-hot-toast'
 
 import { IconFile } from '../../icons/File'
+import { displayFileSize } from '../../utils/fileSize'
 import { displayFileTypeForMimeType } from '../../utils/fileType'
 import { supabaseClient } from '../../utils/supabaseClient'
 import PageWrapper from '../global/PageWrapper'
@@ -22,6 +23,7 @@ export default function FilePage(props: {
     description: string | null
     price_usd: number | null
     extension: string
+    file_size_bytes: number
   }
 }) {
   const { file: serverFile } = props
@@ -146,16 +148,16 @@ export default function FilePage(props: {
           exit={{ opacity: 0 }}
           transition={{ delay: 0.3 }}
           key={'main-content'}
-          className="w-full h-full pt-32"
+          className="w-full  mt-16 sm:mt-32"
         >
           <div className="w-full  flex flex-col md:flex-row gap-3 border-2 border-black ">
             <div
-              className="relative flex-1 md:border-r-2 border-black flex items-center justify-center p-10"
+              className="relative flex-1 md:border-r-2 border-black flex items-center justify-center p-6 sm:p-10"
               style={{ backgroundColor: iconBgColor }}
             >
               <IconFile className="w-32 md:w-64" extension={displayExtension} color={iconBgColor} />
             </div>
-            <div className="flex-none md:w-96 flex flex-col p-10 gap-7 ">
+            <div className="flex-none md:w-96 flex flex-col p-6 sm:p-10 gap-7 ">
               <div className="w-full overflow-hidden" ref={fileNameContainerRef}>
                 <motion.div ref={fileNameRef} animate={controls} className="font-medium text-3xl w-fit">
                   {serverFile.file_name}
@@ -167,7 +169,10 @@ export default function FilePage(props: {
                 ) : (
                   <div className="flex flex-col gap-2">
                     {Array.from({ length: 3 }).map((_skeleton, idx) => (
-                      <div key={`description-skeleton-${idx}`} className="w-64 h-5 bg-gray-300 animate-pulse" />
+                      <div
+                        key={`description-skeleton-${idx}`}
+                        className="w-full h-5 bg-gray-300 rounded-sm animate-pulse"
+                      />
                     ))}
                   </div>
                 )}
@@ -185,7 +190,7 @@ export default function FilePage(props: {
                 <div className="w-full h-[1px] bg-black" />
                 <div className="flex items-center justify-between px-3 py-3 ">
                   <div className="font-bold">File Size</div>
-                  <div className="">12 MB</div>
+                  <div className="">{displayFileSize(serverFile.file_size_bytes)}</div>
                 </div>
               </div>
               {priceUsd !== undefined && priceUsd !== null && (
