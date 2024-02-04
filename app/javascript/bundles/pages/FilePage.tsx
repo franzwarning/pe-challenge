@@ -172,7 +172,7 @@ export default function FilePage(props: {
             </div>
             <div className="flex-none md:w-96 flex flex-col p-6 sm:p-10 gap-7 ">
               <div className="w-full overflow-hidden" ref={fileNameContainerRef}>
-                <motion.div ref={fileNameRef} animate={controls} className="font-medium text-3xl w-fit">
+                <motion.div ref={fileNameRef} animate={controls} className="font-medium text-3xl w-fit text-nowrap">
                   {displayFileName}
                 </motion.div>
               </div>
