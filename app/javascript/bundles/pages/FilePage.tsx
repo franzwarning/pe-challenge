@@ -105,6 +105,19 @@ export default function FilePage(props: {
   const displayFileType = React.useMemo(() => displayFileTypeForMimeType(serverFile.mime_type), [serverFile.mime_type])
 
   /**
+   * File name to display
+   */
+  const displayFileName = React.useMemo(() => {
+    const parts = serverFile.file_name.split('.')
+    return parts.reduce((acc, part, idx) => {
+      if (idx === parts.length - 1) {
+        return acc
+      }
+      return acc + part
+    }, '')
+  }, [serverFile.file_name])
+
+  /**
    * Scroll file name if necessary
    */
   React.useEffect(() => {
@@ -160,7 +173,7 @@ export default function FilePage(props: {
             <div className="flex-none md:w-96 flex flex-col p-6 sm:p-10 gap-7 ">
               <div className="w-full overflow-hidden" ref={fileNameContainerRef}>
                 <motion.div ref={fileNameRef} animate={controls} className="font-medium text-3xl w-fit">
-                  {serverFile.file_name}
+                  {displayFileName}
                 </motion.div>
               </div>
               <div className="">
