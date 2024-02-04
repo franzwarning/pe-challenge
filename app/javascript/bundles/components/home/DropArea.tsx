@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 import { twMerge } from 'tailwind-merge'
 
 import { uploadFile } from '../../../api/api'
-import { GumroadGuy } from '../../../icons/GumroadGuy'
+import { IconGumroadGuy } from '../../../icons/GumroadGuy'
 
 export function DropArea(props: { className: string }) {
   /**
@@ -237,7 +237,7 @@ export function DropArea(props: { className: string }) {
           className={`absolute bottom-0 lg:right-20 md:right-10 sm:right-2 z-10 transition-transform ${isUploading ? `translate-y-full` : ``}`}
           key={'gumroad-guy'}
         >
-          <GumroadGuy />
+          <IconGumroadGuy />
         </motion.div>
         <motion.div
           className="absolute top-0 bottom-0 left-0 bg-[#ff91e7]/30"

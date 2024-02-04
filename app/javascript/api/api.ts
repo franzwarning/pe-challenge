@@ -35,7 +35,8 @@ export async function uploadFile(file: File, progressCallback: (progressPercent)
     method: 'POST',
     body: JSON.stringify({
       file_name: file.name,
-      mime_type: file.type
+      mime_type: file.type,
+      file_size_bytes: file.size
     })
   })
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-export function GumroadGuy() {
+export function IconGumroadGuy() {
   return (
     <svg width="241" height="361" viewBox="0 0 241 361" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M190.786 228.022V356.994H125.41V228.022H190.786Z" fill="#F1F333" />

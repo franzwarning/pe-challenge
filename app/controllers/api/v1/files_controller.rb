@@ -5,7 +5,8 @@ class Api::V1::FilesController < ApiBaseController
   def presigned_url
     file = UserFile.new(
       file_name: normalized_filename,
-      mime_type: presigned_url_params[:mime_type]
+      mime_type: presigned_url_params[:mime_type],
+      file_size_bytes: presigned_url_params[:file_size_bytes]
     )
     file.anonymous_users_id = @anonymous_user.id
 
@@ -40,6 +41,6 @@ class Api::V1::FilesController < ApiBaseController
   end
 
   def presigned_url_params
-    params.permit(:file_name, :mime_type)
+    params.permit(:file_name, :mime_type, :file_size_bytes)
   end
 end

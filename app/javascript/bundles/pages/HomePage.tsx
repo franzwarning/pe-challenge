@@ -18,7 +18,11 @@ export default function HomePage() {
           <a href="https://github.com/franzwarning/pe-challenge" target="__blank" className="underline">
             Engineering by Raymond Kennedy.
           </a>{' '}
-          <a href="https://mattportner.com" className="underline" target="__blank">
+          <a
+            href="https://www.figma.com/file/L0FobE6q2hbvM6Lx3zAyVy/Gumdrop?type=design&node-id=0-1&mode=design&t=WHNKRxgMmGdeJntd-0"
+            className="underline"
+            target="__blank"
+          >
             Design by Matthew Portner.
           </a>
         </div>
