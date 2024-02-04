@@ -12,7 +12,7 @@ export function IconFile({ extension, className, color }: { extension: string; c
         />
       </svg>
       <div
-        className="absolute left-0 right-0 bottom-4 md:bottom-10 text-center text-3xl md:text-7xl font-bold lowercase"
+        className="absolute left-0 right-0 bottom-4 md:bottom-10 text-center text-3xl md:text-7xl font-bold lowercase font-sans"
         style={{ color }}
       >
         {extension}
