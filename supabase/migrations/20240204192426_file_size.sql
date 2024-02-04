@@ -1,0 +1,1 @@
+alter table "public"."user_files" add column "file_size_bytes" bigint not null;

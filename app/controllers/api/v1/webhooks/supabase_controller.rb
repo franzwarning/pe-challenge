@@ -4,7 +4,6 @@ class Api::V1::Webhooks::SupabaseController < ActionController::API
   def create
     file = UserFile.find_by(bucket_path: webhook_params[:name])
     file.uploaded = true
-    debugger
     file.file_size_bytes = webhook_params[:metadata][:contentLength]
     file.save!
 

@@ -1,9 +1,10 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/solid'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import * as React from 'react'
 import toast from 'react-hot-toast'
 
 import { IconFile } from '../../icons/File'
+import { displayFileTypeForMimeType } from '../../utils/fileType'
 import { supabaseClient } from '../../utils/supabaseClient'
 import PageWrapper from '../global/PageWrapper'
 
@@ -27,7 +28,10 @@ export default function FilePage(props: {
 
   const [description, setDescription] = React.useState(serverFile.description)
   const [priceUsd, setPriceUsd] = React.useState(serverFile.price_usd)
+  const fileNameRef = React.useRef<HTMLDivElement>(null)
+  const fileNameContainerRef = React.useRef<HTMLDivElement>(null)
 
+  const controls = useAnimationControls()
   /**
    *  Subscribe to updates in real time
    */
@@ -96,23 +100,29 @@ export default function FilePage(props: {
   /**
    * File type to display
    */
-  const displayFileType = React.useMemo(() => {
-    if (serverFile.mime_type.includes('image')) {
-      return 'Image'
-    } else if (serverFile.mime_type.includes('video')) {
-      return 'Video'
-    } else if (serverFile.mime_type.includes('audio')) {
-      return 'Audio'
-    } else if (serverFile.mime_type.includes('pdf')) {
-      return 'PDF'
-    } else if (serverFile.mime_type.includes('text')) {
-      return 'Text'
-    } else if (serverFile.mime_type.includes('font')) {
-      return 'Font'
-    } else {
-      return 'Unknown'
+  const displayFileType = React.useMemo(() => displayFileTypeForMimeType(serverFile.mime_type), [serverFile.mime_type])
+
+  /**
+   * Scroll file name if necessary
+   */
+  React.useEffect(() => {
+    if (fileNameRef.current && fileNameContainerRef.current) {
+      const fileNameRefWidth = fileNameRef.current.clientWidth
+      const fileNameContainerRefWidth = fileNameContainerRef.current.clientWidth
+
+      const translateX = -1 * Math.max(fileNameRefWidth - fileNameContainerRefWidth, 0)
+      const duration = Math.abs(translateX) / 5
+      controls.start({
+        translateX: [0, translateX, 0],
+        transition: {
+          repeatDelay: 0.2,
+          repeat: Infinity,
+          duration,
+          ease: 'linear'
+        }
+      })
     }
-  }, [serverFile.mime_type])
+  }, [controls])
 
   return (
     <PageWrapper
@@ -138,15 +148,19 @@ export default function FilePage(props: {
           key={'main-content'}
           className="w-full h-full pt-32"
         >
-          <div className="w-full  flex flex-col sm:flex-row gap-3 border-2 border-black ">
+          <div className="w-full  flex flex-col md:flex-row gap-3 border-2 border-black ">
             <div
-              className="relative aspect-square flex-1 border-r-2 border-black flex items-center justify-center"
+              className="relative flex-1 md:border-r-2 border-black flex items-center justify-center p-10"
               style={{ backgroundColor: iconBgColor }}
             >
-              <IconFile className="w-64" extension={displayExtension} color={iconBgColor} />
+              <IconFile className="w-32 md:w-64" extension={displayExtension} color={iconBgColor} />
             </div>
-            <div className="flex-none w-96 flex flex-col p-10 gap-7">
-              <div className="font-medium text-3xl truncate line-clamp-1">{serverFile.file_name}</div>
+            <div className="flex-none md:w-96 flex flex-col p-10 gap-7 ">
+              <div className="w-full overflow-hidden" ref={fileNameContainerRef}>
+                <motion.div ref={fileNameRef} animate={controls} className="font-medium text-3xl w-fit">
+                  {serverFile.file_name}
+                </motion.div>
+              </div>
               <div className="">
                 {description ? (
                   <div>{description}</div>
